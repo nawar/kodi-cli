@@ -1,7 +1,7 @@
 kodi-cli
 ========
 
-Kodi/XBMC bash script to send Kodi commands through remote RPC
+Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sending youtube videos to XBMC.
 
 #Usage
 
