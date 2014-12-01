@@ -51,6 +51,13 @@ function stop {
   xbmc_req '{"jsonrpc": "2.0", "method": "Player.Stop", "params": { "playerid": 1 }, "id": 1}'
 }
 
+function send_text {
+  echo -n "Sending the text"
+  xbmc_req '{"jsonrpc": "2.0", "method": "Input.SendText", "params": { "text": "'$1'" }}'
+}
+
+
+
 function press_key {
 
   ACTION=''
@@ -85,13 +92,13 @@ function press_key {
   if [[ "$ACTION" != " " ]] && [[ $LOCK == false  ]]
   then
 	LOCK=true
-	xbmc_req '{"jsonrpc": "2.0", "method": "Input.'$ACTION'", "id": 1}'
+	xbmc_req '{"jsonrpc": "2.0", "method": "Input.'$ACTION'"}'
 	LOCK=false
   fi
 }
 
 ## Process command line arguments
-while getopts "ypsi" opt; do
+while getopts "ypsti" opt; do
         case $opt in
 		y)
 			#play youtube video
@@ -102,6 +109,8 @@ while getopts "ypsi" opt; do
                         ;;
 		s) 
 			stop
+			;;
+		t)	send_text $2
 			;;
 		i)
 			echo "Interactive navigation key: ";
