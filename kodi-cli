@@ -6,7 +6,7 @@
 ## 	This script is released into the public domain.
  
 ## Configure your XBMC RPC details here
-#set -x
+set -x
  
 XBMC_HOST=192.168.0.103
 XBMC_PORT=80
@@ -68,7 +68,10 @@ function press_key {
 	  D) ACTION='Left'
 		  echo -ne "\rLeft";
 		  ;;
-	  5) ACTION='i'
+	  c) ACTION='ContextMenu'
+		  echo -ne "\rContext Menu";
+		  ;;
+	  i) ACTION='Info'
 		  echo -ne "\rInformation";
 		  ;;
 	  $'\177') ACTION='Back'
