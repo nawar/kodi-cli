@@ -6,7 +6,7 @@
 ## 	This script is released into the public domain.
  
 ## Configure your XBMC RPC details here
-set -x
+#set -x
  
 XBMC_HOST=192.168.0.103
 XBMC_PORT=80
@@ -56,21 +56,23 @@ function press_key {
   echo -t "Key pressed: $1" 
   ACTION=''
 
-  if [[ $1 == "A" ]]
-  then
-	ACTION='Up'	
-  fi
+  case "$1" in
+	  A) ACTION='Up';;
+	  B) ACTION='Down';;
+	  C) ACTION='Right';;
+	  D) ACTION='Left';;
+   esac
 
   if [[ "$ACTION" != "" ]] && [[ $LOCK == false  ]]
   then
 	LOCK=true
 	xbmc_req '{"jsonrpc": "2.0", "method": "Input.'$ACTION'", "id": 1}'
+	LOCK=false
   fi
 }
 
-
 ## Process command line arguments
-while getopts "ypsd" opt; do
+while getopts "ypsi" opt; do
         case $opt in
 		y)
 			#play youtube video
@@ -82,7 +84,7 @@ while getopts "ypsd" opt; do
 		s) 
 			stop
 			;;
-		d)
+		i)
 			while :
 			do
 				read  -s -n1 key
@@ -98,5 +100,3 @@ while getopts "ypsd" opt; do
 			;;
         esac
 done
-
-
