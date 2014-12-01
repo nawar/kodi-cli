@@ -54,7 +54,7 @@ function stop {
 function press_key {
 
   echo -t "Key pressed: $1" 
-  $ACTION=''
+  ACTION=''
 
   if [[ $1 == "A" ]]
   then
