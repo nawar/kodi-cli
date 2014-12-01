@@ -1,0 +1,68 @@
+#!/bin/bash
+ 
+## YouTube XBMC Script 1.0
+## (c) 2013, Tom Laermans - http://tom.laermans.net
+##
+## This script is released into the public domain.
+ 
+## Configure your XBMC RPC details here
+#set -n
+ 
+XBMC_HOST=192.168.0.103
+XBMC_PORT=80
+XBMC_USER=
+XBMC_PASS=
+
+function xbmc_req {
+  curl -s -i -X POST --header "Content-Type: application/json" -d "$1" http://$XBMC_USER:$XBMC_PASS@$XBMC_HOST:$XBMC_PORT/jsonrpc >/dev/null 
+}
+ 
+function play_youtube {
+
+  REGEX="^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*"
+  
+  ID=$1
+  
+  if [ "$ID" == "" ];
+  then
+  	echo "Syntax $0:$1 <id|url>"
+  	exit
+  fi
+  
+  if [[ $ID =~ $REGEX ]]; then
+  	ID=${BASH_REMATCH[7]}
+  fi
+  
+  echo -n "Opening video id $ID on $XBMC_HOST ..."
+  xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Clear", "params":{"playlistid":1}, "id": 1}';
+  xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Add", "params":{"playlistid":1, "item" :{ "file" : "plugin://plugin.video.youtube/?action=play_video&videoid='$ID'"}}, "id" : 1}';
+  xbmc_req '{"jsonrpc": "2.0", "method": "Player.Open", "params":{"item":{"playlistid":1, "position" : 0}}, "id": 1}';
+  echo " done."
+}
+
+function play_pause {
+  echo -n "Pausing/Playing"
+  xbmc_req '{"jsonrpc": "2.0", "method": "Player.PlayPause", "params": { "playerid": 1 }, "id": 1}'
+}
+
+function stop {
+  echo -n "Stopping"
+  xbmc_req '{"jsonrpc": "2.0", "method": "Player.Stop", "params": { "playerid": 1 }, "id": 1}'
+}
+
+while getopts "yps" opt; do
+        case $opt in
+		y)
+			#play youtube video
+			play_youtube $2	
+                        ;;
+                p)
+			play_pause	
+                        ;;
+		s) 
+			stop
+			;;
+        esac
+done
+
+
