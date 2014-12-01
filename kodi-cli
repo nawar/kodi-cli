@@ -6,7 +6,7 @@
 ## 	This script is released into the public domain.
  
 ## Configure your XBMC RPC details here
-set -x
+#set -x
  
 XBMC_HOST=192.168.0.103
 XBMC_PORT=80
@@ -77,9 +77,12 @@ function press_key {
 	  $'\177') ACTION='Back'
 		  echo -ne "\rBack";
 		  ;;
+	  "") ACTION='Select'
+		  echo -ne "\rSelect";
+		  ;;
    esac
 
-  if [[ "$ACTION" != "" ]] && [[ $LOCK == false  ]]
+  if [[ "$ACTION" != " " ]] && [[ $LOCK == false  ]]
   then
 	LOCK=true
 	xbmc_req '{"jsonrpc": "2.0", "method": "Input.'$ACTION'", "id": 1}'
@@ -109,7 +112,7 @@ while getopts "ypsi" opt; do
 				if [[ $key = q ]]
 				then
 					break
-				elif [[ $key != '' ]]
+				elif [[ $key != ' ' ]]
 				then
 					press_key "$key" 
 				fi
