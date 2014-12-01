@@ -12,6 +12,7 @@ XBMC_HOST=192.168.0.103
 XBMC_PORT=80
 XBMC_USER=
 XBMC_PASS=
+LOCK=false
 
 function xbmc_req {
   curl -s -i -X POST --header "Content-Type: application/json" -d "$1" http://$XBMC_USER:$XBMC_PASS@$XBMC_HOST:$XBMC_PORT/jsonrpc >/dev/null 
@@ -60,8 +61,9 @@ function press_key {
 	ACTION='Up'	
   fi
 
-  if [[ "$ACTION" != "" ]]
+  if [[ "$ACTION" != "" ]] && [[ $LOCK == false  ]]
   then
+	LOCK=true
 	xbmc_req '{"jsonrpc": "2.0", "method": "Input.'$ACTION'", "id": 1}'
   fi
 }
