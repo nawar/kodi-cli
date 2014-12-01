@@ -53,14 +53,27 @@ function stop {
 
 function press_key {
 
-  echo -t "Key pressed: $1" 
   ACTION=''
 
   case "$1" in
-	  A) ACTION='Up';;
-	  B) ACTION='Down';;
-	  C) ACTION='Right';;
-	  D) ACTION='Left';;
+	  A) ACTION='Up' 
+		  echo -ne "\rUp";
+		  ;;
+	  B) ACTION='Down'
+		  echo -ne "\rDown";
+		  ;;
+	  C) ACTION='Right'
+		  echo -ne "\rRight";
+		  ;;
+	  D) ACTION='Left'
+		  echo -ne "\rLeft";
+		  ;;
+	  5) ACTION='i'
+		  echo -ne "\rInformation";
+		  ;;
+	  $'\177') ACTION='Back'
+		  echo -ne "\rBack";
+		  ;;
    esac
 
   if [[ "$ACTION" != "" ]] && [[ $LOCK == false  ]]
@@ -85,6 +98,7 @@ while getopts "ypsi" opt; do
 			stop
 			;;
 		i)
+			echo "Interactive navigation key: ";
 			while :
 			do
 				read  -s -n1 key
@@ -94,7 +108,7 @@ while getopts "ypsi" opt; do
 					break
 				elif [[ $key != '' ]]
 				then
-					press_key $key 
+					press_key "$key" 
 				fi
 			done
 			;;
