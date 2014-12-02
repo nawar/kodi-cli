@@ -64,31 +64,32 @@ function send_text {
 function press_key {
 
   ACTION=''
+  CLR="\e[K"
 
   case "$1" in
 	  A) ACTION='Up' 
-		  echo -ne "\rUp";
+		  echo -ne "\rUp$CLR";
 		  ;;
 	  B) ACTION='Down'
-		  echo -ne "\rDown";
+		  echo -ne "\rDown$CLR";
 		  ;;
 	  C) ACTION='Right'
-		  echo -ne "\rRight";
+		  echo -ne "\rRight$CLR";
 		  ;;
 	  D) ACTION='Left'
-		  echo -ne "\rLeft";
+		  echo -ne "\rLeft$CLR";
 		  ;;
 	  c) ACTION='ContextMenu'
-		  echo -ne "\rContext Menu";
+		  echo -ne "\rContext Menu$CLR";
 		  ;;
 	  i) ACTION='Info'
-		  echo -ne "\rInformation";
+		  echo -ne "\rInformation$CLR";
 		  ;;
 	  $'\177') ACTION='Back'
-		  echo -ne "\rBack";
+		  echo -ne "\rBack$CLR";
 		  ;;
 	  "") ACTION='Select'
-		  echo -ne "\rSelect";
+		  echo -ne "\rSelect$CLR";
 		  ;;
    esac
 
