@@ -132,12 +132,13 @@ while getopts "ypstih" opt; do
 			done
 			;;
 		h)
-			echo -e "\n kobi-cli -[p|i|h|s|y youtbe URL/ID]\n\n" \
+			echo -e "\n kobi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
 			"-p Play/Pause the current played video\n" \
 			"-s Stop the current played video\n" \
 			"-y play youtube video. Use either URL/ID (of video)\n" \
 			"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,\n" \
 			"	Context menu and information\n" \
+			"-t 'text to send'\n" \
 			"-h displaying this help message\n"
 			;;
         esac
