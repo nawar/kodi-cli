@@ -59,8 +59,6 @@ function send_text {
   xbmc_req '{"jsonrpc": "2.0", "method": "Input.SendText", "params": { "text": "'$1'" }}'
 }
 
-
-
 function press_key {
 
   ACTION=''
@@ -101,6 +99,22 @@ function press_key {
   fi
 }
 
+function handle_keys {
+echo "Interactive navigation key: ";
+while :
+do
+	read  -s -n1 key
+
+	if [[ $key = q ]]
+	then
+		break
+	elif [[ $key != ' ' ]]
+	then
+		press_key "$key" 
+	fi
+done
+}
+
 ## Process command line arguments
 while getopts "yopstih" opt; do
         case $opt in
@@ -120,21 +134,10 @@ while getopts "yopstih" opt; do
 			stop
 			;;
 		t)	send_text $2
+			handle_keys
 			;;
 		i)
-			echo "Interactive navigation key: ";
-			while :
-			do
-				read  -s -n1 key
-
-				if [[ $key = q ]]
-				then
-					break
-				elif [[ $key != ' ' ]]
-				then
-					press_key "$key" 
-				fi
-			done
+			handle_keys	
 			;;
 		h)
 			echo -e "\n kobi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
