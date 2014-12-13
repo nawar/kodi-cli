@@ -45,17 +45,17 @@ function play_youtube {
 }
 
 function play_pause {
-  echo -n "Pausing/Playing the player"
+  echo "Pausing/Playing the player"
   xbmc_req '{"jsonrpc": "2.0", "method": "Player.PlayPause", "params": { "playerid": 1 }, "id": 1}'
 }
 
 function stop {
-  echo -n "Stopping the player"
+  echo "Stopping the player"
   xbmc_req '{"jsonrpc": "2.0", "method": "Player.Stop", "params": { "playerid": 1 }, "id": 1}'
 }
 
 function send_text {
-  echo -n "Sending the text"
+  echo "Sending the text"
   xbmc_req '{"jsonrpc": "2.0", "method": "Input.SendText", "params": { "text": "'$1'" }}'
 }
 
@@ -102,11 +102,16 @@ function press_key {
 }
 
 ## Process command line arguments
-while getopts "ypstih" opt; do
+while getopts "yopstih" opt; do
         case $opt in
 		y)
 			#play youtube video
 			play_youtube $2	
+                        ;;
+		o)
+			#play youtube video directly
+			#this depends on using mps-youtube
+			play_youtube `mpsyt /$2, i 1, q | grep -i link | awk -F 'v=' '{ print $2 }'`
                         ;;
                 p)
 			play_pause	
@@ -136,6 +141,7 @@ while getopts "ypstih" opt; do
 			"-p Play/Pause the current played video\n" \
 			"-s Stop the current played video\n" \
 			"-y play youtube video. Use either URL/ID (of video)\n" \
+			"-o play youtube video directly on Kodi. Use the name of video.\n" \
 			"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,\n" \
 			"	Context menu and information\n" \
 			"-t 'text to send'\n" \
