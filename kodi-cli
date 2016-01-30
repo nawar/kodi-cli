@@ -11,14 +11,24 @@
 ## Configure your XBMC RPC details here
 #set -x
  
-XBMC_HOST=192.168.0.103
-XBMC_PORT=80
+XBMC_HOST=127.0.0.1
+XBMC_PORT=8080
 XBMC_USER=
 XBMC_PASS=
 LOCK=false
 
 function xbmc_req {
-  curl -s -i -X POST --header "Content-Type: application/json" -d "$1" http://$XBMC_USER:$XBMC_PASS@$XBMC_HOST:$XBMC_PORT/jsonrpc >/dev/null 
+  output=$(curl -s -i -X POST --header "Content-Type: application/json" -d "$1" http://$XBMC_USER:$XBMC_PASS@$XBMC_HOST:$XBMC_PORT/jsonrpc)  
+
+  if [[ $2 = true ]];
+  then
+	  echo $output
+  fi 
+}
+
+function parse_json {
+ key=$1
+ awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/'$key'\042/){print $(i+1)}}}' | tr -d '"' 
 }
  
 function play_youtube {
@@ -45,13 +55,19 @@ function play_youtube {
 }
 
 function play_pause {
-  echo "Pausing/Playing the player"
-  xbmc_req '{"jsonrpc": "2.0", "method": "Player.PlayPause", "params": { "playerid": 1 }, "id": 1}'
+  # Get Active players first
+  output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+  player_id=`echo $output | parse_json "playerid"` 
+  echo "Pausing/Playing the player with ID => $player_id"
+  xbmc_req '{"jsonrpc": "2.0", "method": "Player.PlayPause", "params": { "playerid": '$player_id' }, "id": 1}' 
 }
 
 function stop {
-  echo "Stopping the player"
-  xbmc_req '{"jsonrpc": "2.0", "method": "Player.Stop", "params": { "playerid": 1 }, "id": 1}'
+  # Get Active players first
+  output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+  player_id=`echo $output | parse_json "playerid"` 
+  echo "Stopping the player with ID => $player_id"
+  xbmc_req '{"jsonrpc": "2.0", "method": "Player.Stop", "params": { "playerid": '$player_id' }, "id": 1}'
 }
 
 function send_text {

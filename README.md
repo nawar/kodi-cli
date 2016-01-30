@@ -1,11 +1,11 @@
 kodi-cli
 ========
 
-Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sending youtube videos to XBMC.
+Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sending youtube videos to Kodi.
 
 #Usage
 
-`kobi-cli -[p|i|s|y youtbe URL/ID|t "text to send"|o "youtube title"]`
+`kodi-cli -[p|i|s|y youtbe URL/ID|t "text to send"|o "youtube title"]`
 
 #Arguments
 ```
@@ -20,3 +20,6 @@ information and context menu.
 
 #Dependencies
 for the "-o" option to work you'll need to install [mps-youtube](https://github.com/np1/mps-youtube)
+
+#Version
+1.0
