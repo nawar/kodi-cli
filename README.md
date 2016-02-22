@@ -12,7 +12,7 @@ Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sendi
 -p Play/Pause the current played video
 -s Stop the current played video
 -y play youtube video. Use either URL/ID (of video)
--q queue youtube video to the current list. Use either URL/ID (of video)
+-q queue youtube video to the current list. Use either URL/ID (of video). Use after -y.
 -o play youtube video directly on Kodi. Use the name of video.
 -i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back, information and context menu.
 -t "text to send"
