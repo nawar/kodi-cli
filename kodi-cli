@@ -49,13 +49,13 @@ function play_youtube {
   
   echo -n "Opening video id $ID on $KODI_HOST ..."
 
-  # defunc: clearing the list
+  # clear the list
   xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Clear", "params":{"playlistid":1}, "id": 1}';
 
-  # add the video as the first to the list to the list
+  # add the video to the list
   xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Add", "params":{"playlistid":1, "item" :{ "file" : "plugin://plugin.video.youtube/?action=play_video&videoid='$ID'"}}, "id" : 1}';
 
-  # open the vidoe 
+  # open the video
   xbmc_req '{"jsonrpc": "2.0", "method": "Player.Open", "params":{"item":{"playlistid":1, "position" : 0}}, "id": 1}';
 
   echo " done."
