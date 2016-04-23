@@ -7,6 +7,10 @@
 ## 	YouTube XBMC Script 1.0
 ## 	(c) 2013, Tom Laermans - http://tom.laermans.net
 ## 	This script is released into the public domain.
+##
+## Volume control added by elpraga
+## using the command found at http://forum.kodi.tv/showthread.php?tid=176795
+
  
 ## Configure your KODI RPC details here
 #set -x
@@ -164,17 +168,36 @@ do
 done
 }
 
+function volume_up {
+  # Get Active players first
+  output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+  player_id=`echo $output | parse_json "playerid"` 
+  echo "Incrementing volume on the player with ID => $player_id"
+  xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "increment" }, "id": 1 }' 
+}
+
+function volume_down {
+  # Get Active players first
+  output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+  player_id=`echo $output | parse_json "playerid"` 
+  echo "Decrementing volume on the player with ID => $player_id"
+  xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "decrement" }, "id": 1 }' 
+}
+
+
 function show_help {
 
 echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
 	"-p Play/Pause the current played video\n" \
 	"-s Stop the current played video\n" \
 	"-y play youtube video. Use either URL/ID (of video)\n" \
-	"-q queue youtube video to the current list. Use either URL/ID (of video). Use after -y.\n" \
+	"-q queue youtube video to the current list. Use either URL/ID (of video). Use instead of -y.\n" \
 	"-o play youtube video directly on Kodi. Use the name of video.\n" \
 	"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,\n" \
 	"	Context menu and information\n" \
 	"-t 'text to send'\n" \
+	"-u Increment the volume on Kodi\n" \
+	"-d Decrement the volume on Kodi\n" \
 	"-h showing this help message\n"
 
 }
@@ -206,6 +229,12 @@ while getopts "yqopstih" opt; do
 			;;
 		i)
 			handle_keys	
+			;;
+		u)
+			volume_up
+			;;
+		d)
+			volume_down 
 			;;
 		h)
 			show_help		
