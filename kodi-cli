@@ -184,6 +184,13 @@ function volume_down {
   xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "decrement" }, "id": 1 }' 
 }
 
+function fullscreen_toggle {
+  # Get Active players first
+  output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+  player_id=`echo $output | parse_json "playerid"`
+  echo "Toggle fullscreen on the player with ID => $player_id"
+  xbmc_req '{ "jsonrpc": "2.0", "method": "GUI.SetFullscreen", "params": { "fullscreen": "toggle" }, "id": 1 }'
+}
 
 function show_help {
 
@@ -198,12 +205,13 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
 	"-t 'text to send'\n" \
 	"-u Increment the volume on Kodi\n" \
 	"-d Decrement the volume on Kodi\n" \
+	"-f toggle fullscreen\n" \
 	"-h showing this help message\n"
 
 }
 
 ## Process command line arguments
-while getopts "yqopstiudh" opt; do
+while getopts "yqopstiudfh" opt; do
         case $opt in
 		y)
 			#play youtube video
@@ -236,6 +244,9 @@ while getopts "yqopstiudh" opt; do
 		d)
 			volume_down 
 			;;
+		f)
+                        fullscreen_toggle         
+                        ;;
 		h)
 			show_help		
 			;;
