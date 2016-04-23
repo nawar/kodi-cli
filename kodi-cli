@@ -203,7 +203,7 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
 }
 
 ## Process command line arguments
-while getopts "yqopstih" opt; do
+while getopts "yqopstiudh" opt; do
         case $opt in
 		y)
 			#play youtube video
