@@ -169,18 +169,12 @@ done
 }
 
 function volume_up {
-  # Get Active players first
-  output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
-  player_id=`echo $output | parse_json "playerid"` 
-  echo "Incrementing volume on the player with ID => $player_id"
+  echo "Incrementing volume"
   xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "increment" }, "id": 1 }' 
 }
 
 function volume_down {
-  # Get Active players first
-  output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
-  player_id=`echo $output | parse_json "playerid"` 
-  echo "Decrementing volume on the player with ID => $player_id"
+  echo "Decrementing volume on"
   xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "decrement" }, "id": 1 }' 
 }
 
