@@ -13,13 +13,6 @@ def close_window(*args):
 #def on_closing():
 #        if messagebox.askokcancel("Quit", "Do you want to quit?"):
 #                    root.destroy()
-                    
-#def play(*args):
-#    try:
-#        value = float(youtube_link.get())
-#        output_text.set((0.3048 * value * 10000.0 + 0.5)/10000.0)
-#    except ValueError:
-#        pass
 
 def add(*args):
     output=(subprocess.check_output(["kodi-cli", "-q", clipboard_value]))
