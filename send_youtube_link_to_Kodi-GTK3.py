@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
-# Update of my simple script for controlling Kodi from the computer
-# my first intent with GTK3
-# Tomas Kaluza
+## License: GPL (c) 2016
+##
+## Update of my simple script for controlling Kodi from the computer
+## my first intent with GTK3 and I use it to learn about GTK3 and python3
+## Tomas Kaluza
 
 import gi
 gi.require_version('Gtk', '3.0')
