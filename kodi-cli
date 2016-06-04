@@ -8,16 +8,16 @@
 ## 	(c) 2013, Tom Laermans - http://tom.laermans.net
 ## 	This script is released into the public domain.
 ##
-## Volume control added by elPraga
-## using the command found at http://forum.kodi.tv/showthread.php?tid=176795
+## Volume control, seek, suspend and get played time added by elPraga
+## I use this file as a learning playgroud. 
  
 ## Configure your KODI RPC details here
 #set -x
  
-KODI_HOST=192.168.1.100
-KODI_PORT=8080
-KODI_USER=xbmc
-KODI_PASS=xbmc
+KODI_HOST=
+KODI_PORT=
+KODI_USER=
+KODI_PASS=
 LOCK=false
 
 function xbmc_req {
