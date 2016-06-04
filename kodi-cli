@@ -8,17 +8,16 @@
 ## 	(c) 2013, Tom Laermans - http://tom.laermans.net
 ## 	This script is released into the public domain.
 ##
-## Volume control added by elpraga
+## Volume control added by elPraga
 ## using the command found at http://forum.kodi.tv/showthread.php?tid=176795
-
  
 ## Configure your KODI RPC details here
 #set -x
  
-KODI_HOST=127.0.0.1
+KODI_HOST=192.168.1.100
 KODI_PORT=8080
-KODI_USER=
-KODI_PASS=
+KODI_USER=xbmc
+KODI_PASS=xbmc
 LOCK=false
 
 function xbmc_req {
@@ -51,7 +50,7 @@ function play_youtube {
   	ID=${BASH_REMATCH[7]}
   fi
   
-  echo -n "Opening video id $ID on $KODI_HOST ..."
+  echo -n "Opening video on $KODI_HOST ..."
 
   # clear the list
   xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Clear", "params":{"playlistid":1}, "id": 1}';
@@ -84,7 +83,7 @@ function queue_yt_videos {
   output=`xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.GetItems", "params":{"playlistid":1}, "id": 99}' true`
   numberitems=`echo $output | parse_json "total"`
   
-  echo -n "Video added to the current playlist $ID on $KODI_HOST which has ($numberitems) items..."
+  echo -n "Video added to the playlist on $KODI_HOST having ($numberitems) items now."
   # add the video to the list
   xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Add", "params":{"playlistid":1, "item" :{ "file" : "plugin://plugin.video.youtube/?action=play_video&videoid='$ID'"}}, "id" : 1}';
 
@@ -168,11 +167,12 @@ do
 done
 }
 
+## added by Tomas,to control volume code taken from http://forum.kodi.tv/showthread.php?tid=176795 
 function volume_up {
   # Get Active players first
   output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
   player_id=`echo $output | parse_json "playerid"` 
-  echo "Incrementing volume on the player with ID => $player_id"
+  echo "Pausing/Playing the player with ID => $player_id"
   xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "increment" }, "id": 1 }' 
 }
 
@@ -180,7 +180,7 @@ function volume_down {
   # Get Active players first
   output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
   player_id=`echo $output | parse_json "playerid"` 
-  echo "Decrementing volume on the player with ID => $player_id"
+  echo "Pausing/Playing the player with ID => $player_id"
   xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "decrement" }, "id": 1 }' 
 }
 
@@ -192,26 +192,78 @@ function fullscreen_toggle {
   xbmc_req '{ "jsonrpc": "2.0", "method": "GUI.SetFullscreen", "params": { "fullscreen": "toggle" }, "id": 1 }'
 }
 
+function retreive_percentage {
+  # http://forum.kodi.tv/showthread.php?tid=171901&highlight=position
+  # Get the percentage of currently playing video / audio
+  #output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+  output=`xbmc_req '{ "jsonrpc": "2.0", "method": "Player.GetProperties", "params":{"playerid":1,"properties":["percentage"]}, "id": 1 }' true`
+  # check the raw output
+  #echo $output
+  percentage=`echo $output | parse_json "percentage"` 
+  # check the percentaget we got
+  echo $percentage
+}
+
+function go_to_percentage {
+  # http://forum.kodi.tv/showthread.php?tid=68263&page=201
+  # using $1 as it is the first argument for this function
+  # values as 55.5 are also accepted
+  xbmc_req '{"jsonrpc":"2.0",  "id": "libSeek", "method": "Player.Seek", "params": {"playerid": 1, "value": '$1' }}'
+  
+  output=`xbmc_req '{ "jsonrpc": "2.0", "method": "Player.GetProperties", "params":{"playerid":1,"properties":["time"]}, "id": 1 }' true`
+  # check the raw output
+  #echo $output
+  hours=`echo $output | parse_json "hours"`
+  minutes=`echo $output | parse_json "minutes"`
+  seconds=`echo $output | parse_json "seconds"`
+  seconds=`echo $seconds |cut -f 2 -d " "`
+  # let's add a leading zero (seconds 1-9 don't have the leading zero)
+  seconds=`echo 0$seconds`
+  # and let's stick with just two digits
+  # http://stackoverflow.com/questions/19858600/bash-accessing-last-x-characters-of-string
+  seconds=${seconds: -2}
+  echo "Playing from $hours:$minutes:$seconds"
+}
+
+function play_next_in_playlist {
+  # http://forum.kodi.tv/showthread.php?tid=68263&page=201
+  # this is a quick and somewhat dirty hack to play next item in the playlist
+  # I still did not figure out how to do it properly, so instead I seek to the very end of the current item
+  xbmc_req '{"jsonrpc":"2.0",  "id": "libSeek", "method": "Player.Seek", "params": {"playerid": 1, "value": '99.9999' }}'
+  
+  echo "Playing next item in playlist..."
+}
+
+function system_suspend {
+  xbmc_req '{"jsonrpc": "2.0", "method": "System.Suspend", "id":1}'
+
+  echo "Suspendig the system" 
+}
+
 function show_help {
 
 echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
-	"-p Play/Pause the current played video\n" \
-	"-s Stop the current played video\n" \
-	"-y play youtube video. Use either URL/ID (of video)\n" \
-	"-q queue youtube video to the current list. Use either URL/ID (of video). Use instead of -y.\n" \
-	"-o play youtube video directly on Kodi. Use the name of video.\n" \
+	"-d Decrement the volume on Kodi\n" \
+     	"-f toggle fullscreen\n" \
+    	"-g go to specified percentage of the video\n" \
+	"-h showing this help message\n" \
 	"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,\n" \
 	"	Context menu and information\n" \
+	"-n play next item in current playlist\n" \
+    	"-o play youtube video directly on Kodi, use the name of video (this option depends on using mps-youtube)\n" \
+	"-p Play/Pause the current played video\n" \
+	"-q queue youtube video to the current list, use either URL or ID (of video); use instead of -y\n" \
+	"-r retreive the percentage of the total time that has been played already\n" \
+	"-s stop the playback\n" \
 	"-t 'text to send'\n" \
-	"-u Increment the volume on Kodi\n" \
-	"-d Decrement the volume on Kodi\n" \
-	"-f toggle fullscreen\n" \
-	"-h showing this help message\n"
+	"-u increment the volume on Kodi\n" \
+	"-y play youtube video; use either URL or ID (of video)\n" \
+	"-z suspend the system with Kodi\n" 
 
 }
 
 ## Process command line arguments
-while getopts "yqopstiudfh" opt; do
+while getopts "yqopstiudfrgnzh" opt; do
         case $opt in
 		y)
 			#play youtube video
@@ -245,8 +297,20 @@ while getopts "yqopstiudfh" opt; do
 			volume_down 
 			;;
 		f)
-                        fullscreen_toggle         
-                        ;;
+			fullscreen_toggle 
+			;;
+		r)
+			retreive_percentage 
+			;;
+		g)
+			go_to_percentage $2
+			;;
+		n)
+			play_next_in_playlist
+			;;
+		z)
+			system_suspend
+			;;
 		h)
 			show_help		
 			;;
