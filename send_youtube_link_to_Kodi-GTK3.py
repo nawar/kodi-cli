@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 ## License: GPL (c) 2016
 ##
 ## Update of my simple script for controlling Kodi from the computer
@@ -8,8 +9,8 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GObject
-## Use the following if you want to use Gtk.Clipboard
+from gi.repository import Gtk, Gdk, GObject
+## Use the following if you want to use Gtk.Clipboard - obsolete  Gdk is used already for keyboard shortcuts (alt d)
 #from gi.repository import Gtk, Gdk
 import subprocess
 
@@ -84,7 +85,14 @@ class GridWindow(Gtk.Window):
         self.toggle_playpause.connect("clicked", self.on_toggle_playpause)
         self.play_now.connect("clicked", self.on_play_now)
 
-        self.timeout_id = GObject.timeout_add(1000, self.on_get_percentage, None)
+        try:
+            self.timeout_id = GObject.timeout_add(1000, self.on_get_percentage, None)
+        except:
+            pass
+        # Alt-D keyboard shortcut to select the text in the Entry box
+        accel = Gtk.AccelGroup()
+        accel.connect(Gdk.keyval_from_name('D'), Gdk.ModifierType.MOD1_MASK, 0, self.on_altd_pressed)
+        self.add_accel_group(accel)
 
     #def on_mouse_click(progressbar, widget, event):
     def on_mouse_click(self, widget, event):
@@ -189,7 +197,14 @@ class GridWindow(Gtk.Window):
         # we got the value from the previous line
         if event.keyval == 65307 :
              Gtk.main_quit()
-
+    def on_altd_pressed(self, *args):
+        # http://askubuntu.com/questions/655452/python-gtk3-keyboard-accelerators
+        # Let's try if alt D pressed is recognized
+        #print("alt D pressed")
+        self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        self.clipboard_value = self.clipboard.wait_for_text()
+        self.youtube_entry.set_text(self.clipboard_value)
+        
 
 win = GridWindow()
 win.connect("delete-event", Gtk.main_quit)
