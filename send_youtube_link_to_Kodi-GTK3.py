@@ -204,7 +204,8 @@ class GridWindow(Gtk.Window):
         self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clipboard_value = self.clipboard.wait_for_text()
         self.youtube_entry.set_text(self.clipboard_value)
-        
+        # Let's try to give it focus as well:
+        self.set_focus(self.youtube_entry)
 
 win = GridWindow()
 win.connect("delete-event", Gtk.main_quit)
