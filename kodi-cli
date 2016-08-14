@@ -1,5 +1,5 @@
 #!/bin/bash
-## Author: Nawar 
+## Author: Nawar, additions byt elpraga
 ## License: GPL (c) 2014
 ##
 ## Note:
@@ -14,10 +14,10 @@
 ## Configure your KODI RPC details here
 #set -x
  
-KODI_HOST=192.168.1.100
-KODI_PORT=8080
-KODI_USER=xbmc
-KODI_PASS=xbmc
+KODI_HOST=
+KODI_PORT=
+KODI_USER=
+KODI_PASS=
 LOCK=false
 
 function xbmc_req {
@@ -167,7 +167,7 @@ do
 done
 }
 
-## added by Tomas,to control volume code taken from http://forum.kodi.tv/showthread.php?tid=176795 
+## added by elpraga,to control volume code taken from http://forum.kodi.tv/showthread.php?tid=176795 
 function volume_up {
   # Get Active players first
   output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
