@@ -8,16 +8,16 @@
 ## 	(c) 2013, Tom Laermans - http://tom.laermans.net
 ## 	This script is released into the public domain.
 ##
-## Volume control, seek, suspend and get played time added by elPraga
-## I use this file as a learning playgroud. 
+## Volume control added by elPraga
+## using the command found at http://forum.kodi.tv/showthread.php?tid=176795
  
 ## Configure your KODI RPC details here
 #set -x
  
-KODI_HOST=
-KODI_PORT=
-KODI_USER=
-KODI_PASS=
+KODI_HOST=192.168.1.100
+KODI_PORT=8080
+KODI_USER=xbmc
+KODI_PASS=xbmc
 LOCK=false
 
 function xbmc_req {
@@ -215,12 +215,16 @@ function go_to_percentage {
   #echo $output
   hours=`echo $output | parse_json "hours"`
   minutes=`echo $output | parse_json "minutes"`
+  # let's add a leading zero (seconds 1-9 don't have the leading zero)
+  minutes=`echo 0$minutes`
+  # and let's stick with just two digits
+  # http://stackoverflow.com/questions/19858600/bash-accessing-last-x-characters-of-string
+  minutes=${minutes: -2}
   seconds=`echo $output | parse_json "seconds"`
   seconds=`echo $seconds |cut -f 2 -d " "`
   # let's add a leading zero (seconds 1-9 don't have the leading zero)
   seconds=`echo 0$seconds`
   # and let's stick with just two digits
-  # http://stackoverflow.com/questions/19858600/bash-accessing-last-x-characters-of-string
   seconds=${seconds: -2}
   echo "Playing from $hours:$minutes:$seconds"
 }
