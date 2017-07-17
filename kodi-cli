@@ -1,5 +1,5 @@
 #!/bin/bash
-## Author: Nawar, additions byt elpraga
+## Author: Nawar 
 ## License: GPL (c) 2014
 ##
 ## Note:
@@ -14,10 +14,11 @@
 ## Configure your KODI RPC details here
 #set -x
  
-KODI_HOST=
-KODI_PORT=
-KODI_USER=
-KODI_PASS=
+KODI_HOST=192.168.1.104
+#KODI_HOST=192.168.1.130
+KODI_PORT=8080
+KODI_USER=xbmc
+KODI_PASS=2412
 LOCK=false
 
 function xbmc_req {
@@ -50,7 +51,7 @@ function play_youtube {
   	ID=${BASH_REMATCH[7]}
   fi
   
-  echo -n "Opening video on $KODI_HOST ..."
+  echo -n "Opening video id $ID on $KODI_HOST ..."
 
   # clear the list
   xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Clear", "params":{"playlistid":1}, "id": 1}';
@@ -83,7 +84,7 @@ function queue_yt_videos {
   output=`xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.GetItems", "params":{"playlistid":1}, "id": 99}' true`
   numberitems=`echo $output | parse_json "total"`
   
-  echo -n "Video added to the playlist on $KODI_HOST having ($numberitems) items now."
+  echo -n "Video added to the current playlist $ID on $KODI_HOST which has ($numberitems) items..."
   # add the video to the list
   xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Add", "params":{"playlistid":1, "item" :{ "file" : "plugin://plugin.video.youtube/?action=play_video&videoid='$ID'"}}, "id" : 1}';
 
@@ -167,7 +168,7 @@ do
 done
 }
 
-## added by elpraga,to control volume code taken from http://forum.kodi.tv/showthread.php?tid=176795 
+## added by Tomas,to control volume code taken from http://forum.kodi.tv/showthread.php?tid=176795 
 function volume_up {
   # Get Active players first
   output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
@@ -215,17 +216,21 @@ function go_to_percentage {
   #echo $output
   hours=`echo $output | parse_json "hours"`
   minutes=`echo $output | parse_json "minutes"`
-  # let's add a leading zero (seconds 1-9 don't have the leading zero)
-  minutes=`echo 0$minutes`
-  # and let's stick with just two digits
-  # http://stackoverflow.com/questions/19858600/bash-accessing-last-x-characters-of-string
-  minutes=${minutes: -2}
   seconds=`echo $output | parse_json "seconds"`
+  ## Let's check the output
+  #echo "minutes: $minutes"
+  #echo "second: $seconds"
   seconds=`echo $seconds |cut -f 2 -d " "`
   # let's add a leading zero (seconds 1-9 don't have the leading zero)
   seconds=`echo 0$seconds`
   # and let's stick with just two digits
+  # http://stackoverflow.com/questions/19858600/bash-accessing-last-x-characters-of-string
   seconds=${seconds: -2}
+  # let's add a leading zero to minutes as well (minutes 1-9 don't have the leading zero)
+  minutes=`echo 0$minutes`
+  # and let's stick with just two digits
+  # http://stackoverflow.com/questions/19858600/bash-accessing-last-x-characters-of-string
+  minutes=${minutes: -2}
   echo "Playing from $hours:$minutes:$seconds"
 }
 
