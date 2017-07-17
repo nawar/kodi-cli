@@ -8,17 +8,16 @@
 ## 	(c) 2013, Tom Laermans - http://tom.laermans.net
 ## 	This script is released into the public domain.
 ##
-## Volume control added by elPraga
+## Volume control and more details added by elPraga
 ## using the command found at http://forum.kodi.tv/showthread.php?tid=176795
  
 ## Configure your KODI RPC details here
 #set -x
  
-KODI_HOST=192.168.1.104
-#KODI_HOST=192.168.1.130
+KODI_HOST=
 KODI_PORT=8080
-KODI_USER=xbmc
-KODI_PASS=2412
+KODI_USER=
+KODI_PASS=
 LOCK=false
 
 function xbmc_req {
