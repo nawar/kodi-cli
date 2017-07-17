@@ -3,8 +3,7 @@
 
 Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sending youtube videos to Kodi. The GTK3 frontend simpliefies sending YouTube links and controling basic aspects of playback withing X, as for example seeking by clicking on the progress bar.
 
-![GTK3 frontend screenshot]
-(https://github.com/elpraga/kodi-cli/blob/master/send_YouTube_link_to_Kodi-screenshot-playing_from.png?raw=true)
+![GTK3 frontend screenshot](https://github.com/elpraga/kodi-cli/blob/master/send_YouTube_link_to_Kodi-screenshot-playing_from.png?raw=true)
 
 #Usage
 
