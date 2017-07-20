@@ -9,11 +9,18 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GObject
+from gi.repository import Gtk, Gdk, GObject, GLib, Gio
+## https://media.readthedocs.org/pdf/python-gtk-3-tutorial/latest/python-gtk-3-tutorial.pdf
+## page 82
+from gi.repository.GdkPixbuf import Pixbuf
 ## Use the following if you want to use Gtk.Clipboard - obsolete  Gdk is used already for keyboard shortcuts (alt d)
 #from gi.repository import Gtk, Gdk
 import subprocess
 
+
+## Fix Setting correct icon and application name in gnome3 Dash and Wayland. Modified from here:
+## https://github.com/michaldaniel/Ebook-Viewer/issues/19
+## https://github.com/michaldaniel/Ebook-Viewer/pull/21/files
 
 class GridWindow(Gtk.Window):
 
@@ -39,6 +46,31 @@ class GridWindow(Gtk.Window):
 
 
         Gtk.Window.__init__(self, title="Send YouTube link to Kodi using kodi-cli")
+        #self.set_title("Test using the properties")
+        self.set_default_size(200, 100);
+        ## Following works when the app is running under X11
+        ## self.set_default_icon_name kicks in when set_icon_name doesn't fine the icon in the theme
+        ## All three follwing  worked under Gnome3 - X11
+        ## https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Window.html#Gtk.Window.set_icon_list
+        #pixbuf24 = Gtk.IconTheme.get_default().load_icon(icon, 24, 0)
+        #pixbuf32 = Gtk.IconTheme.get_default().load_icon(icon, 32, 0)
+        #pixbuf48 = Gtk.IconTheme.get_default().load_icon(icon, 48, 0)
+        #pixbuf64 = Gtk.IconTheme.get_default().load_icon(icon, 64, 0)
+        #pixbuf96 = Gtk.IconTheme.get_default().load_icon(icon, 96, 0)
+        #self.set_icon_list([pixbuf24, pixbuf32, pixbuf48, pixbuf64, pixbuf96]);
+        ## https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Window.html#Gtk.Window.set_default_icon_list
+        ## https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Window.html#Gtk.Window.set_icon_from_file
+        try:
+            self.set_icon_from_file("/usr/local/share/icons/scalable/apps/send_to_kodi.svg")
+        except:
+            self.set_icon_name("youtube")
+            self.set_default_icon_name("video-display")
+        ## Fix Setting correct icon and application name in gnome3 Dash and Wayland. 
+        ## must match the exec= in the .desktop file
+        ## Modified from here:
+        ## https://github.com/michaldaniel/Ebook-Viewer/issues/19
+        ## https://github.com/michaldaniel/Ebook-Viewer/pull/21/files
+        GLib.set_prgname('send_YouTube_link_to_Kodi')
         self.set_border_width(8)
         grid = Gtk.Grid()
         grid.set_row_spacing(10)
