@@ -18,10 +18,6 @@ from gi.repository.GdkPixbuf import Pixbuf
 import subprocess
 
 
-## Fix Setting correct icon and application name in gnome3 Dash and Wayland. Modified from here:
-## https://github.com/michaldaniel/Ebook-Viewer/issues/19
-## https://github.com/michaldaniel/Ebook-Viewer/pull/21/files
-
 class GridWindow(Gtk.Window):
 
     def __init__(self):
