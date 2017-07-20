@@ -1,0 +1,10 @@
+[Desktop Entry]
+Categories=Multimedia;
+MimeType=
+Exec=send_YouTube_link_to_Kodi
+Icon=/usr/local/share/icons/scalable/apps/send_to_kodi.svg
+StartupNotify=false
+Terminal=false
+Type=Application
+Name=Send YouTube link to kodi-cli
+Comment=Send a YouTube link to play in Kodi in the living room

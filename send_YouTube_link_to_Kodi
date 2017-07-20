@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/python3 /usr/local/bin/send_YouTube_link_to_Kodi-GTK3.py
