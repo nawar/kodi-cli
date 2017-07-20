@@ -169,18 +169,12 @@ done
 
 ## added by Tomas,to control volume code taken from http://forum.kodi.tv/showthread.php?tid=176795 
 function volume_up {
-  # Get Active players first
-  output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
-  player_id=`echo $output | parse_json "playerid"` 
-  echo "Pausing/Playing the player with ID => $player_id"
+  echo "Incrementing volume"
   xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "increment" }, "id": 1 }' 
 }
 
 function volume_down {
-  # Get Active players first
-  output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
-  player_id=`echo $output | parse_json "playerid"` 
-  echo "Pausing/Playing the player with ID => $player_id"
+  echo "Decrementing volume on"
   xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "decrement" }, "id": 1 }' 
 }
 
