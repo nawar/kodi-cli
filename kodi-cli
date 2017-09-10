@@ -242,6 +242,12 @@ function system_suspend {
   echo "Suspendig the system" 
 }
 
+function quit_xbmc {
+  xbmc_req '{"jsonrpc":"2.0","method":"Application.Quit","id":1}'
+
+  echo "Exiting XBMC"
+}
+
 function show_help {
 
 echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
@@ -259,13 +265,14 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
 	"-s stop the playback\n" \
 	"-t 'text to send'\n" \
 	"-u increment the volume on Kodi\n" \
+        "-x exit XBMC" \
 	"-y play youtube video; use either URL or ID (of video)\n" \
 	"-z suspend the system with Kodi\n" 
 
 }
 
 ## Process command line arguments
-while getopts "yqopstiudfrgnzh" opt; do
+while getopts "yqopstiudfrgnxzh" opt; do
         case $opt in
 		y)
 			#play youtube video
@@ -310,6 +317,9 @@ while getopts "yqopstiudfrgnzh" opt; do
 		n)
 			play_next_in_playlist
 			;;
+                x)
+                        quit_xbmc
+                        ;;
 		z)
 			system_suspend
 			;;
