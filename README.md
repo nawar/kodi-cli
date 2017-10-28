@@ -7,7 +7,7 @@ Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sendi
 
 `kodi-cli -[p|i|s|(y|q) youtube URL/ID|t "text to send"|o "youtube title"]`
 
-#Setup
+# Setup
 
 You must either put your Kodi setup (found under "Interfaces") in the first few lines of the script itself, or put a file named .kodirc in your $HOME directory. This file (example provided) contains only four lines in *this specific order*:
 
@@ -18,7 +18,7 @@ Username
 Password
 ```
 
-#Arguments
+# Arguments
 ```
  -p Play/Pause the current played video
  -s Stop the current played video
