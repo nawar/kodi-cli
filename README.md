@@ -22,6 +22,8 @@ Password
 ```
  -p Play/Pause the current played video
  -s Stop the current played video
+ -j Skip forward in the current played video     
+ -k Skip backward in the current played video     
  -y play YouTube video. Use either URL/ID (of video)
  -q queue YouTube video to the current list. Use either URL/ID (of video). Use instead of -y.
  -o play YouTube video directly on Kodi. Use the name of video.
