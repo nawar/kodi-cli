@@ -49,3 +49,13 @@ Password
 
 * [mps-youtube](https://github.com/np1/mps-youtube) on the machine running Kodi for the -o option to work.
 
+## Advanced usage
+
+With the addition of a few other tools, most notably
+
+* [youtube-dl](https://github.com/rg3/youtube-dl)
+* [jq](https://github.com/stedolan/jq)
+* [zenity](https://github.com/GNOME/zenity)
+* awk (should be part of your distro).
+
+You can create a dialog to download and sequentially (and with confirmation) play entire playlists - defaulting to your Watch Later playlist - on your Kodi, acting like a kind of remote "casting" program.  See the script **playlist_to_kodi** for an example.
