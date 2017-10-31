@@ -85,6 +85,11 @@ function play_youtube {
     echo " done."
 }
 
+function play_playlist {
+    xbmc_req '{"jsonrpc": "2.0", "method": "Player.Open", "params":{"item":{"playlistid":1, "position" : 0}}, "id": 1}';
+    
+}
+
 function queue_yt_videos {
 
     REGEX="^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*"
@@ -277,8 +282,11 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtube URL/ID|t 'text to send']\n\n" \
 }
 
 ## Process command line arguments
-while getopts "yqopstiudfhvmnjk" opt; do
+while getopts "yqopstiudfhvmnjkl" opt; do
     case $opt in
+        l)  #play default playlist
+            play_playlist
+            ;;
         y)
             #play youtube video
             play_youtube $2
