@@ -30,6 +30,7 @@ Password
  -v interactive volume control
  -i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,
     Context menu and information
+ -l Play current playlist (most useful after using -q a few times)
  -t 'text to send'
  -u Increment the volume on Kodi
  -d Decrement the volume on Kodi

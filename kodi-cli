@@ -271,6 +271,7 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtube URL/ID|t 'text to send']\n\n" \
     "-v interactive volume control\n" \
     "-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,\n" \
     "   Context menu and information\n" \
+    "-l Play default playlist (most useful after using -q a few times)\n" \
     "-t 'text to send'\n" \
     "-u Increment the volume on Kodi\n" \
     "-d Decrement the volume on Kodi\n" \
