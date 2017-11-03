@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# By Steven Saus (uriel1998)
+
+# Required
+# youtube-dl
+# jq
+# curl
+# awk
+# Zenity
+
+
+TEMPFILE=$(mktemp)
+
+if [ -z "$1" ];then
+    szAnswer=$(zenity --timeout 30 --entry --text "What is the playlist URL?" --entry-text ""); echo $szAnswer
+else
+    szAnswer=$(echo "$1")
+fi
+
+if [ -z "$szAnswer" ];then
+    szAnswer=$(echo "https://www.youtube.com/playlist?list=WL")
+fi
+
+if [ "$2" == "-nostop" ];then
+    NOSTOP="TRUE"
+fi
+
+youtube-dl "$szAnswer" --netrc --cookies /path/to/cookies.txt --skip-download -j |  tee >(zenity --progress  --title="Fetching playlist" --text="Please be patient..." --pulsate --auto-close --auto-kill)  | jq -M --unbuffered '@text "\(.fulltitle)@@\(.webpage_url)"' > "$TEMPFILE" 
+
+while read line; do
+    if [ -z "$NOSTOP" ];then
+        vidtitle=$(echo "$line" | awk -F '"' '{print $2}' | awk -F '@@' '{print $1}')
+        zenity --info --timeout=60 --text="Playing $vidtitle"     
+        vidurl=$(echo "$line" | awk -F '"' '{print $2}' | awk -F '@@' '{print $2}') 
+        kodi-cli -y "$vidurl"
+        zenity --info --timeout=60 --text="Marking $vidtitle watched"
+        # Marking video watched
+        #echo "Marking video watched"
+        youtube-dl "$vidurl" --netrc --cookies /path/to/cookies.txt --quiet --skip-download --mark-watched
+        zenity --question --text="Press Yes to continue"
+        if [ $? = 1 ]; then
+            exit
+        fi
+    else
+        vidurl=$(echo "$line" | awk -F '"' '{print $2}' | awk -F '@@' '{print $2}') 
+        kodi-cli -q "$vidurl"        
+        youtube-dl "$vidurl" --netrc --cookies /path/to/cookies.txt --quiet --skip-download --mark-watched
+    fi
+done < "$TEMPFILE"
+
+kodi-cli -l 

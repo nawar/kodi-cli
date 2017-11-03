@@ -30,6 +30,7 @@ Password
  -v interactive volume control
  -i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,
     Context menu and information
+ -l Play current playlist (most useful after using -q a few times)
  -t 'text to send'
  -u Increment the volume on Kodi
  -d Decrement the volume on Kodi
@@ -49,3 +50,13 @@ Password
 
 * [mps-youtube](https://github.com/np1/mps-youtube) on the machine running Kodi for the -o option to work.
 
+## Advanced usage
+
+With the addition of a few other tools, most notably
+
+* [youtube-dl](https://github.com/rg3/youtube-dl)
+* [jq](https://github.com/stedolan/jq)
+* [zenity](https://github.com/GNOME/zenity)
+* awk (should be part of your distro).
+
+You can create a dialog to download and sequentially (and with confirmation) play entire playlists - defaulting to your Watch Later playlist - on your Kodi, acting like a kind of remote "casting" program.  See the script **playlist_to_kodi** for an example.
