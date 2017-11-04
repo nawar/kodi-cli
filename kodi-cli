@@ -154,15 +154,17 @@ function send_text {
 }
 
 function update_libraries {
-    echo "Pausing/Playing the player with ID => $player_id"
-    xbmc_req '{"jsonrpc": "2.0", "method": "AudioLibrary.Scan", id": "mybash"}'
-    xbmc_req '{"jsonrpc": "2.0", "method": "VideoLibrary.Scan", id": "mybash"}'
+    echo "Updating the video libraries"
+    xbmc_req '{"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "mybash"}'
+    echo "Updating the audio libraries"
+    xbmc_req '{"jsonrpc": "2.0", "method": "AudioLibrary.Scan", "id": "mybash"}'
+
 }
 
 function clean_libraries {
-    echo "Pausing/Playing the player with ID => $player_id"
-    xbmc_req '{"jsonrpc": "2.0", "method": "AudioLibrary.Clean", id": "mybash"}'
-    xbmc_req '{"jsonrpc": "2.0", "method": "VideoLibrary.Clean", id": "mybash"}'
+    echo "Cleaning the libraries"
+    xbmc_req '{"jsonrpc": "2.0", "method": "AudioLibrary.Clean", "id": "mybash"}'
+    xbmc_req '{"jsonrpc": "2.0", "method": "VideoLibrary.Clean", "id": "mybash"}'
 }
 
 
@@ -329,7 +331,6 @@ while getopts "yqopstiudfhvmnjkl" opt; do
         m)
             update_libraries
             ;;
-
         n)
             clean_libraries
             ;;
