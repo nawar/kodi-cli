@@ -163,8 +163,8 @@ function update_libraries {
 
 function clean_libraries {
     echo "Pausing/Playing the player with ID => $player_id"
-    xbmc_req '{"jsonrpc": "2.0", "method": "AudioLibrary.Clean", id": "mybash"}'
-    xbmc_req '{"jsonrpc": "2.0", "method": "VideoLibrary.Clean", id": "mybash"}'
+    xbmc_req '{"jsonrpc": "2.0", "method": "AudioLibrary.Clean", "id": "mybash"}'
+    xbmc_req '{"jsonrpc": "2.0", "method": "VideoLibrary.Clean", "id": "mybash"}'
 }
 
 
