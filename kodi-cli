@@ -14,32 +14,6 @@
 ## using the command found at http://kodi.wiki/view/HOW-TO:Remotely_update_library
 ## .kodirc added by uriel1998
 
-## Configure your KODI RPC details here
-
-KODI_HOST=
-KODI_PORT=
-KODI_USER=
-KODI_PASS=
-LOCK=false
-
-# If the script does not have configuration hardcoded, the script will
-# search for it in $HOME/.kodirc
-
-if [ -z "$KODI_HOST" ]; then
-    if [ -f "$HOME/.kodirc" ];then
-        readarray -t line < "$HOME/.kodirc"
-        KODI_HOST=${line[0]}
-        KODI_PORT=${line[1]}
-        KODI_USER=${line[2]}
-        KODI_PASS=${line[3]}
-    fi
-fi
-
-# Ensure some configuration is loaded, or exit.
-if [ -z "$KODI_HOST" ]; then
-    show_help
-    exit
-fi
 
 function xbmc_req {
     output=$(curl -s -i -X POST --header "Content-Type: application/json" -d "$1" http://$KODI_USER:$KODI_PASS@$KODI_HOST:$KODI_PORT/jsonrpc)
@@ -284,6 +258,42 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtube URL/ID|t 'text to send']\n\n" \
 
 }
 
+## main 
+## check if we have any argument
+if [ $# -eq 0 ];then
+	echo -e "\n failure: make sure there is at least one argument"
+	show_help
+	exit
+fi
+
+## ---- Configuration --- ##
+## Configure your KODI RPC details here
+KODI_HOST=
+KODI_PORT=
+KODI_USER=
+KODI_PASS=
+LOCK=false
+
+# If the script does not have configuration hardcoded, the script will
+# search for it in $HOME/.kodirc
+
+if [ -z "$KODI_HOST" ]; then
+    if [ -f "$HOME/.kodirc" ];then
+        readarray -t line < "$HOME/.kodirc"
+        KODI_HOST=${line[0]}
+        KODI_PORT=${line[1]}
+        KODI_USER=${line[2]}
+        KODI_PASS=${line[3]}
+    fi
+fi
+
+# Ensure some configuration is loaded, or exit.
+if [ -z "$KODI_HOST" ]; then
+	echo -e "\n failure: Some Kodi configurations are not loaded. Please make sure they are."
+	show_help
+	exit
+fi
+
 ## Process command line arguments
 while getopts "yqopstiudfhvmnjkl" opt; do
     case $opt in
@@ -348,6 +358,4 @@ while getopts "yqopstiudfhvmnjkl" opt; do
 done
 
 
-if [ $# -eq 0 ];then
-    show_help
-fi
+
