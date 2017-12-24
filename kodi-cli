@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ## Author: Nawar
 ## License: GPL (c) 2014
 ##
@@ -259,6 +259,11 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtube URL/ID|t 'text to send']\n\n" \
 }
 
 ## main 
+## check Bash version compatibility
+if ((BASH_VERSINFO[0] < 4)); then
+    echo -e "Error: $0 requires Bash version 4+"
+    exit 1
+fi
 ## check if we have any argument
 if [ $# -eq 0 ];then
 	echo -e "\n failure: make sure there is at least one argument"

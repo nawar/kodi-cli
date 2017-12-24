@@ -43,8 +43,9 @@ Password
 
 ## Dependencies
 
-* curl
-* Kodi
+* [bash](https://www.gnu.org/software/bash/) version 4+
+* [curl](https://curl.haxx.se/)
+* [Kodi](https://kodi.tv/)
 
 ## Optional dependencies
 
