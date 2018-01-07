@@ -83,11 +83,10 @@ function queue_yt_videos {
   output=`xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.GetItems", "params":{"playlistid":1}, "id": 99}' true`
   numberitems=`echo $output | parse_json "total"`
   
-  echo -n "Video added. There're ($numberitems) items in playlist $ID on $KODI_HOST."
   # add the video to the list
   xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Add", "params":{"playlistid":1, "item" :{ "file" : "plugin://plugin.video.youtube/?action=play_video&videoid='$ID'"}}, "id" : 1}';
-
-  echo " done."
+  
+  echo -n "Video $ID added. There're ($numberitems) items in the playlist on $KODI_HOST."
 }
 
 function play_pause {
