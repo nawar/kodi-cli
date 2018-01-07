@@ -15,8 +15,9 @@ Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sendi
  -f toggle fullscreen
  -g go to specified percentage of the video
  -h showing this help message
- -i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,
- 	Context menu and information
+ -i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back, hjkl (vim-like)
+    (c)Context menu and (i)Information
+ -j jump back given # of seconds
  -n play next item in current playlist
  -o play youtube video directly on Kodi, use the name of video (this option depends on using mps-youtube)
  -p Play/Pause the current played video
@@ -25,6 +26,7 @@ Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sendi
  -s stop the playback
  -t 'text to send'
  -u increment the volume on Kodi
+ -x exit XBMC
  -y play youtube video; use either URL or ID (of video)
  -z suspend the system with Kodi
 

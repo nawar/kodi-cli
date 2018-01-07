@@ -83,11 +83,10 @@ function queue_yt_videos {
   output=`xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.GetItems", "params":{"playlistid":1}, "id": 99}' true`
   numberitems=`echo $output | parse_json "total"`
   
-  echo -n "Video added to the current playlist $ID on $KODI_HOST which has ($numberitems) items..."
   # add the video to the list
   xbmc_req '{"jsonrpc": "2.0", "method": "Playlist.Add", "params":{"playlistid":1, "item" :{ "file" : "plugin://plugin.video.youtube/?action=play_video&videoid='$ID'"}}, "id" : 1}';
-
-  echo " done."
+  
+  echo -n "Video $ID added. There're ($numberitems) items in the playlist on $KODI_HOST."
 }
 
 function play_pause {
@@ -117,17 +116,29 @@ function press_key {
   CLR="\e[K"
 
   case "$1" in
-	  A) ACTION='Up' 
-		  echo -ne "\rUp$CLR";
-		  ;;
-	  B) ACTION='Down'
-		  echo -ne "\rDown$CLR";
-		  ;;
-	  C) ACTION='Right'
-		  echo -ne "\rRight$CLR";
-		  ;;
-	  D) ACTION='Left'
-		  echo -ne "\rLeft$CLR";
+          k) ACTION='Up'
+                  echo -ne "\rUp$CLR";
+                  ;;
+          A) ACTION='Up'
+                  echo -ne "\rUp$CLR";
+                  ;;
+          j) ACTION='Down'
+                  echo -ne "\rDown$CLR";
+                  ;;
+          B) ACTION='Down'
+                  echo -ne "\rDown$CLR";
+                  ;;
+          l) ACTION='Right'
+                  echo -ne "\rRight$CLR";
+                  ;;
+          C) ACTION='Right'
+                  echo -ne "\rRight$CLR";
+                  ;;
+          h) ACTION='Left'
+                  echo -ne "\rLeft$CLR";
+                  ;;
+          D) ACTION='Left'
+                  echo -ne "\rLeft$CLR";
 		  ;;
 	  c) ACTION='ContextMenu'
 		  echo -ne "\rContext Menu$CLR";
@@ -198,6 +209,29 @@ function retreive_percentage {
   echo $percentage
 }
 
+function jump_back {
+        # Jump back given ammount of seconds. Useful for learning languages.
+        output=`xbmc_req '{ "jsonrpc": "2.0", "method": "Player.GetProperties", "params":{"playerid":1,"properties":["time"]}, "id": 1 }' true`
+        hours=`echo $output | parse_json "hours"`
+        minutes=`echo $output | parse_json "minutes"`
+        seconds=`echo $output | parse_json "seconds"`
+        seconds=`echo $seconds |cut -f 2 -d " "`
+        current_seconds=$(($seconds+60*$minutes+60*60*$hours))
+        #echo current seconds: $current_seconds
+        output=`xbmc_req '{ "jsonrpc": "2.0", "method": "Player.GetProperties", "params":{"playerid":1,"properties":["percentage"]}, "id": 1 }' true`
+        # check the raw output
+        #echo $output
+        percentage=`echo $output | parse_json "percentage"`
+        # check the percentage we got
+        #echo current percentage $percentage
+        echo Jumping $1 seconds back...
+        #echo
+        one_second=$(python -c "print $percentage/$current_seconds")
+        jump_value_percentage=$(python -c "print $one_second*$1")
+        jump_to_percentage=$(python -c "print $percentage-$jump_value_percentage")
+        xbmc_req '{"jsonrpc":"2.0",  "id": "libSeek", "method": "Player.Seek", "params": {"playerid": 1, "value": '$jump_to_percentage' }}'
+}
+
 function go_to_percentage {
   # http://forum.kodi.tv/showthread.php?tid=68263&page=201
   # using $1 as it is the first argument for this function
@@ -242,6 +276,12 @@ function system_suspend {
   echo "Suspendig the system" 
 }
 
+function quit_xbmc {
+  xbmc_req '{"jsonrpc":"2.0","method":"Application.Quit","id":1}'
+
+  echo "Exiting XBMC"
+}
+
 function show_help {
 
 echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
@@ -249,8 +289,9 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
      	"-f toggle fullscreen\n" \
     	"-g go to specified percentage of the video\n" \
 	"-h showing this help message\n" \
-	"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,\n" \
-	"	Context menu and information\n" \
+	"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back, hjkl (vim-like)\n" \
+	"   (c)Context menu and (i)Information\n" \
+	"-j jump back given # of seconds\n" \
 	"-n play next item in current playlist\n" \
     	"-o play youtube video directly on Kodi, use the name of video (this option depends on using mps-youtube)\n" \
 	"-p Play/Pause the current played video\n" \
@@ -259,13 +300,13 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
 	"-s stop the playback\n" \
 	"-t 'text to send'\n" \
 	"-u increment the volume on Kodi\n" \
+        "-x exit XBMC" \
 	"-y play youtube video; use either URL or ID (of video)\n" \
 	"-z suspend the system with Kodi\n" 
-
 }
 
 ## Process command line arguments
-while getopts "yqopstiudfrgnzh" opt; do
+while getopts "yqopstiudfrgjnxzh" opt; do
         case $opt in
 		y)
 			#play youtube video
@@ -307,9 +348,15 @@ while getopts "yqopstiudfrgnzh" opt; do
 		g)
 			go_to_percentage $2
 			;;
+                j)
+                        jump_back $2
+                        ;;
 		n)
 			play_next_in_playlist
 			;;
+                x)
+                        quit_xbmc
+                        ;;
 		z)
 			system_suspend
 			;;
