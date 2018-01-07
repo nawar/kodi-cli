@@ -116,17 +116,29 @@ function press_key {
   CLR="\e[K"
 
   case "$1" in
-	  k) ACTION='Up' 
-		  echo -ne "\rUp$CLR";
-		  ;;
-	  j) ACTION='Down'
-		  echo -ne "\rDown$CLR";
-		  ;;
-	  l) ACTION='Right'
-		  echo -ne "\rRight$CLR";
-		  ;;
-	  h) ACTION='Left'
-		  echo -ne "\rLeft$CLR";
+          k) ACTION='Up'
+                  echo -ne "\rUp$CLR";
+                  ;;
+          A) ACTION='Up'
+                  echo -ne "\rUp$CLR";
+                  ;;
+          j) ACTION='Down'
+                  echo -ne "\rDown$CLR";
+                  ;;
+          B) ACTION='Down'
+                  echo -ne "\rDown$CLR";
+                  ;;
+          l) ACTION='Right'
+                  echo -ne "\rRight$CLR";
+                  ;;
+          C) ACTION='Right'
+                  echo -ne "\rRight$CLR";
+                  ;;
+          h) ACTION='Left'
+                  echo -ne "\rLeft$CLR";
+                  ;;
+          D) ACTION='Left'
+                  echo -ne "\rLeft$CLR";
 		  ;;
 	  c) ACTION='ContextMenu'
 		  echo -ne "\rContext Menu$CLR";
