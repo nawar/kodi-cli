@@ -289,8 +289,8 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
      	"-f toggle fullscreen\n" \
     	"-g go to specified percentage of the video\n" \
 	"-h showing this help message\n" \
-	"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,\n" \
-	"	Context menu and information\n" \
+	"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back, hjkl (vim-like)\n" \
+	"   (c)Context menu and (i)Information\n" \
 	"-j jump back given # of seconds\n" \
 	"-n play next item in current playlist\n" \
     	"-o play youtube video directly on Kodi, use the name of video (this option depends on using mps-youtube)\n" \
