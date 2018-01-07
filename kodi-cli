@@ -161,6 +161,12 @@ function press_key {
           d) ACTION='Volume down'
                   echo -ne "\rVolume down$CLR";
                   ;;
+          s) ACTION='Stop'
+                  echo -ne "\rStopping playback$CLR";
+                  ;;
+          p) ACTION='Pause'
+                  echo -ne "\rPause / Play$CLR";
+                  ;;
   esac
 
   if [[ "$ACTION" != " " ]] && [[ $LOCK == false  ]]
@@ -181,6 +187,22 @@ function press_key {
         then
                 LOCK=true
                 xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "decrement" }, "id": 1 }'
+                LOCK=false
+        fi
+        if [[ "$ACTION" == "Stop" ]] && [[ $LOCK == false  ]]
+        then
+                LOCK=true
+                output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+                player_id=`echo $output | parse_json "playerid"`
+                xbmc_req '{"jsonrpc": "2.0", "method": "Player.Stop", "params": { "playerid": '$player_id' }, "id": 1}'
+                LOCK=false
+        fi
+        if [[ "$ACTION" == "Pause" ]] && [[ $LOCK == false  ]]
+        then
+                LOCK=true
+                output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+                player_id=`echo $output | parse_json "playerid"`
+                xbmc_req '{"jsonrpc": "2.0", "method": "Player.PlayPause", "params": { "playerid": '$player_id' }, "id": 1}'
                 LOCK=false
         fi
 	LOCK=true
@@ -317,7 +339,7 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
     	"-g go to specified percentage of the video\n" \
 	"-h showing this help message\n" \
 	"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back, hjkl (vim-like)\n" \
-	"   (c)Context menu, (i)Information, (f)Toggle Fullscreen, (u)Volume Up, and (d)Volume Down\n" \
+	"   (c)Context menu, (i)Information, (f)Toggle Fullscreen, (u)Volume Up, (d)Volume Down, (s)Stop, and (p)Pause\n" \
 	"-j jump back given # of seconds\n" \
 	"-n play next item in current playlist\n" \
     	"-o play youtube video directly on Kodi, use the name of video (this option depends on using mps-youtube)\n" \
