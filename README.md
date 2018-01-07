@@ -15,7 +15,7 @@ Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sendi
  -f toggle fullscreen
  -g go to specified percentage of the video
  -h showing this help message
- -i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back, hjkl (vim like)
+ -i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back, hjkl (vim-like)
     (c)Context menu and (i)Information
  -j jump back given # of seconds
  -n play next item in current playlist
