@@ -167,6 +167,9 @@ function press_key {
           p) ACTION='Pause'
                   echo -ne "\rPause / Play$CLR";
                   ;;
+  	  n) ACTION='Play next'
+		  echo -ne "\rPlay next$CLR";
+		  ;;
   esac
 
   if [[ "$ACTION" != " " ]] && [[ $LOCK == false  ]]
@@ -205,6 +208,12 @@ function press_key {
                 xbmc_req '{"jsonrpc": "2.0", "method": "Player.PlayPause", "params": { "playerid": '$player_id' }, "id": 1}'
                 LOCK=false
         fi
+	if [[ "$ACTION" == "Play next" ]] && [[ $LOCK == false  ]]
+  	then
+		LOCK=true
+		xbmc_req '{"jsonrpc":"2.0",  "id": "libSeek", "method": "Player.Seek", "params": {"playerid": 1, "value": '99.9999' }}'
+		LOCK=false
+	fi 
 	LOCK=true
 	xbmc_req '{"jsonrpc": "2.0", "method": "Input.'$ACTION'"}'
 	LOCK=false
@@ -340,6 +349,7 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
 	"-h showing this help message\n" \
 	"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back, hjkl (vim-like)\n" \
 	"   (c)Context menu, (i)Information, (f)Toggle Fullscreen, (u)Volume Up, (d)Volume Down, (s)Stop, and (p)Pause\n" \
+	"   Play (n)next item of the playlist" \
 	"-j jump back given # of seconds\n" \
 	"-n play next item in current playlist\n" \
     	"-o play youtube video directly on Kodi, use the name of video (this option depends on using mps-youtube)\n" \
