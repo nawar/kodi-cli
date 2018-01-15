@@ -152,10 +152,68 @@ function press_key {
 	  "") ACTION='Select'
 		  echo -ne "\rSelect$CLR";
 		  ;;
-   esac
+          f) ACTION='Fullscreen'
+                  echo -ne "\rToggle Fullscreen$CLR";
+                  ;;
+          u) ACTION='Volume up'
+                  echo -ne "\rVolume up$CLR";
+                  ;;
+          d) ACTION='Volume down'
+                  echo -ne "\rVolume down$CLR";
+                  ;;
+          s) ACTION='Stop'
+                  echo -ne "\rStopping playback$CLR";
+                  ;;
+          p) ACTION='Pause'
+                  echo -ne "\rPause / Play$CLR";
+                  ;;
+  	  n) ACTION='Play next'
+		  echo -ne "\rPlay next$CLR";
+		  ;;
+  esac
 
   if [[ "$ACTION" != " " ]] && [[ $LOCK == false  ]]
   then
+        if [[ "$ACTION" == "Fullscreen" ]] && [[ $LOCK == false  ]]
+        then
+                LOCK=true
+                xbmc_req '{ "jsonrpc": "2.0", "method": "GUI.SetFullscreen", "params": { "fullscreen": "toggle" }, "id": 1 }'
+                LOCK=false
+        fi
+        if [[ "$ACTION" == "Volume up" ]] && [[ $LOCK == false  ]]
+        then
+                LOCK=true
+                xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "increment" }, "id": 1 }'
+                LOCK=false
+        fi
+        if [[ "$ACTION" == "Volume down" ]] && [[ $LOCK == false  ]]
+        then
+                LOCK=true
+                xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "decrement" }, "id": 1 }'
+                LOCK=false
+        fi
+        if [[ "$ACTION" == "Stop" ]] && [[ $LOCK == false  ]]
+        then
+                LOCK=true
+                output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+                player_id=`echo $output | parse_json "playerid"`
+                xbmc_req '{"jsonrpc": "2.0", "method": "Player.Stop", "params": { "playerid": '$player_id' }, "id": 1}'
+                LOCK=false
+        fi
+        if [[ "$ACTION" == "Pause" ]] && [[ $LOCK == false  ]]
+        then
+                LOCK=true
+                output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
+                player_id=`echo $output | parse_json "playerid"`
+                xbmc_req '{"jsonrpc": "2.0", "method": "Player.PlayPause", "params": { "playerid": '$player_id' }, "id": 1}'
+                LOCK=false
+        fi
+	if [[ "$ACTION" == "Play next" ]] && [[ $LOCK == false  ]]
+  	then
+		LOCK=true
+		xbmc_req '{"jsonrpc":"2.0",  "id": "libSeek", "method": "Player.Seek", "params": {"playerid": 1, "value": '99.9999' }}'
+		LOCK=false
+	fi 
 	LOCK=true
 	xbmc_req '{"jsonrpc": "2.0", "method": "Input.'$ACTION'"}'
 	LOCK=false
@@ -290,7 +348,8 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtbe URL/ID|t 'text to send']\n\n" \
     	"-g go to specified percentage of the video\n" \
 	"-h showing this help message\n" \
 	"-i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back, hjkl (vim-like)\n" \
-	"   (c)Context menu and (i)Information\n" \
+	"   (c)Context menu, (i)Information, (f)Toggle Fullscreen, (u)Volume Up, (d)Volume Down, (s)Stop, and (p)Pause\n" \
+	"   Play (n)next item of the playlist" \
 	"-j jump back given # of seconds\n" \
 	"-n play next item in current playlist\n" \
     	"-o play youtube video directly on Kodi, use the name of video (this option depends on using mps-youtube)\n" \
