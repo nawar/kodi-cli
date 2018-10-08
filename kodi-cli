@@ -198,6 +198,10 @@ function handle_keys {
     done
 }
 
+function volume_mute {
+    echo "Volume mute"
+    xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetMute", "params": { "mute": "toggle" }, "id": 1 }'
+}
 function volume_up {
     echo "Incrementing volume"
     xbmc_req '{ "jsonrpc": "2.0", "method": "Application.SetVolume", "params": { "volume": "increment" }, "id": 1 }'
@@ -251,6 +255,7 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtube URL/ID|t 'text to send']\n\n" \
     "-t 'text to send'\n" \
     "-u Increment the volume on Kodi\n" \
     "-d Decrement the volume on Kodi\n" \
+    "-x Mute/Unmute the volume on Kodi\n" \
     "-f toggle fullscreen\n" \
     "-m Update libraries\n" \
     "-n clean libraries\n" \
@@ -300,7 +305,7 @@ if [ -z "$KODI_HOST" ]; then
 fi
 
 ## Process command line arguments
-while getopts "yqopstiudfhvmnjkl" opt; do
+while getopts "yqopstiudfhvmnjklx" opt; do
     case $opt in
         l)  #play default playlist
             play_playlist
@@ -358,9 +363,9 @@ while getopts "yqopstiudfhvmnjkl" opt; do
         k)
             skip_backward
             ;;
+        x)
+            volume_mute
+            ;;
 
     esac
 done
-
-
-
