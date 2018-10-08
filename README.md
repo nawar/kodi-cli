@@ -5,11 +5,15 @@ Kodi/XBMC bash script to send Kodi commands using JSON RPC. It also allows sendi
 
 ## Usage
 
+A sample usage would be 
+
 `kodi-cli -[p|i|s|(y|q) youtube URL/ID|t "text to send"|o "youtube title"]`
+
+Please check the [Arguments][] section on how to use the rest of the available options.
 
 ## Setup
 
-You must either put your Kodi setup (found under "Interfaces") in the first few lines of the script itself, or put a file named .kodirc in your $HOME directory. This file (example provided) contains only four lines in *this specific order*:
+You must either put your Kodi setup (found under "Interfaces") in the first few lines of the script itself, or put a file named `.kodirc` in your `$HOME` directory. This file (example provided) contains only four lines in *this specific order*:
 
 ```
 The Kodi Host
@@ -24,20 +28,20 @@ Password
  -s Stop the current played video
  -j Skip forward in the current played video     
  -k Skip backward in the current played video     
- -y play YouTube video. Use either URL/ID (of video)
- -q queue YouTube video to the current list. Use either URL/ID (of video). Use instead of -y.
- -o play YouTube video directly on Kodi. Use the name of video.
- -v interactive volume control
- -i interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,
+ -y Play YouTube video. Use either URL/ID (of video)
+ -q Queue YouTube video to the current list. Use either URL/ID (of video). Use instead of -y.
+ -o Play YouTube video directly on Kodi. Use the name of video.
+ -v Interactive volume control
+ -i Interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,
     Context menu and information
  -l Play current playlist (most useful after using -q a few times)
  -t 'text to send'
  -u Increment the volume on Kodi
  -d Decrement the volume on Kodi
- -f toggle fullscreen
+ -f Toggle fullscreen
  -m Update libraries
- -n clean libraries
- -h showing this help message
+ -n Clean libraries
+ -h Showing this help message
 
 ```
 
