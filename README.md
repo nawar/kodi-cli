@@ -9,7 +9,7 @@ A sample usage would be
 
 `kodi-cli -[p|i|s|(y|q) youtube URL/ID|t "text to send"|o "youtube title"]`
 
-Please check the [Arguments][] section on how to use the rest of the available options.
+Please check the [Arguments](#arguments) section on how to use the rest of the available options.
 
 ## Setup
 
