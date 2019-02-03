@@ -22,6 +22,17 @@ Username
 Password
 ```
 
+If you don't want to add your kodi passwword, you might leave the password line empty and instead specify a command invocation in the next line that returns your password on stdout.
+
+
+```
+The Kodi Host
+The port Kodi listens on (the webserver port)
+Username
+
+Commannd invocation that returns the password on stdout (e.g. pass mykodibox/kodi)
+```
+
 ## Arguments
 ```
  -p Play/Pause the current played video
