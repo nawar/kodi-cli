@@ -294,6 +294,7 @@ if [ -z "$KODI_HOST" ]; then
         KODI_PORT=${line[1]}
         KODI_USER=${line[2]}
         KODI_PASS=${line[3]}
+	KODI_PASSWORD_COMMAND=${line[4]}
     fi
 fi
 
@@ -302,6 +303,11 @@ if [ -z "$KODI_HOST" ]; then
 	echo -e "\n failure: Some Kodi configurations are not loaded. Please make sure they are."
 	show_help
 	exit
+fi
+
+#Run an external command to fetch the password if neccessary.
+if [ -z "$KODI_PASS" ] && [ -n "$KODI_PASSWORD_COMMAND" ]; then
+    KODI_PASS=$($KODI_PASSWORD_COMMAND)
 fi
 
 ## Process command line arguments
