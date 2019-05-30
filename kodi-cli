@@ -127,6 +127,12 @@ function send_text {
     xbmc_req '{"jsonrpc": "2.0", "method": "Input.SendText", "params": { "text": "'$1'" }}'
 }
 
+function pipe_text {
+    while IFS= read -r input; do
+	xbmc_req '{"jsonrpc": "2.0", "method": "Input.SendText", "params": { "text": "'$input'" }}'
+    done
+}
+
 function update_libraries {
     echo "Updating the video libraries"
     xbmc_req '{"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "mybash"}'
@@ -253,6 +259,7 @@ echo -e "\n kodi-cli -[p|i|h|s|y youtube URL/ID|t 'text to send']\n\n" \
     "   Context menu and information\n" \
     "-l Play default playlist (most useful after using -q a few times)\n" \
     "-t 'text to send'\n" \
+    "-r Send text from stdin to kodi\n" \
     "-u Increment the volume on Kodi\n" \
     "-d Decrement the volume on Kodi\n" \
     "-x Mute/Unmute the volume on Kodi\n" \
@@ -311,7 +318,7 @@ if [ -z "$KODI_PASS" ] && [ -n "$KODI_PASSWORD_COMMAND" ]; then
 fi
 
 ## Process command line arguments
-while getopts "yqopstiudfhvmnjklx" opt; do
+while getopts "yqoprstiudfhvmnjklx" opt; do
     case $opt in
         l)  #play default playlist
             play_playlist
@@ -335,6 +342,10 @@ while getopts "yqopstiudfhvmnjklx" opt; do
         s)
             stop
             ;;
+	r)
+	    pipe_text
+	    ;;
+
         t)  
             send_text $2
             handle_keys
