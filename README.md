@@ -37,18 +37,20 @@ Commannd invocation that returns the password on stdout (e.g. pass mykodibox/kod
 ```
  -p Play/Pause the current played video
  -s Stop the current played video
- -j Skip forward in the current played video     
- -k Skip backward in the current played video     
- -y Play YouTube video. Use either URL/ID (of video)
- -q Queue YouTube video to the current list. Use either URL/ID (of video). Use instead of -y.
- -o Play YouTube video directly on Kodi. Use the name of video.
+ -j Skip forward in the current played video by 10 seconds. Use -j <seconds> to specify custom time)
+ -k Skip backward in the current played video by 10 seconds. Use -k <seconds> to specify custom time)
+ -y Play youtube video. Use either URL/ID (of video)
+ -q Queue youtube video to the current list. Use either URL/ID (of video). Use instead of -y.
+ -o Play youtube video directly on Kodi. Use the name of video.
  -v Interactive volume control
  -i Interactive navigation mode. Accept keyboard keys of Up, Down, Left, Right, Back,
     Context menu and information
- -l Play current playlist (most useful after using -q a few times)
+ -l Play default playlist (most useful after using -q a few times)
  -t 'text to send'
+ -r Send text from stdin to kodi
  -u Increment the volume on Kodi
  -d Decrement the volume on Kodi
+ -x Mute/Unmute the volume on Kodi
  -f Toggle fullscreen
  -m Update libraries
  -n Clean libraries

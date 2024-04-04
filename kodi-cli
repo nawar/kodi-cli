@@ -106,20 +106,25 @@ function stop {
     xbmc_req '{"jsonrpc": "2.0", "method": "Player.Stop", "params": { "playerid": '$player_id' }, "id": 1}'
 }
 
+function skip_time {
+    local seconds=${1:-10}  # Default to 10 seconds if not provided
+    echo $seconds
+}
+
 function skip_forward {
-    # Get Active players first
-    output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
-    player_id=`echo $output | parse_json "playerid"`
-    echo "Skipping forward the player with ID => $player_id"
-    xbmc_req '{"jsonrpc": "2.0", "method": "Player.Seek", "params": { "playerid": '$player_id', "value" : "smallforward" }, "id": 1}'
+    local seconds=$(skip_time $1)
+    output=$(xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true)
+    player_id=$(echo "$output" | parse_json "playerid")
+    echo "Skipping forward the player with ID => $player_id for $seconds seconds"
+    xbmc_req '{"jsonrpc": "2.0", "method": "Player.Seek", "params": { "playerid": '$player_id', "value" : { "seconds": '$seconds' } }, "id": 1}'
 }
 
 function skip_backward {
-    # Get Active players first
-    output=`xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true`
-    player_id=`echo $output | parse_json "playerid"`
-    echo "Skipping back with the player with ID => $player_id"
-    xbmc_req '{"jsonrpc": "2.0", "method": "Player.Seek", "params": { "playerid": '$player_id', "value" : "smallbackward" }, "id": 1}'
+    local seconds=$(skip_time $1)
+    output=$(xbmc_req '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 99}' true)
+    player_id=$(echo "$output" | parse_json "playerid")
+    echo "Skipping back with the player with ID => $player_id for $seconds seconds"
+    xbmc_req '{"jsonrpc": "2.0", "method": "Player.Seek", "params": { "playerid": '$player_id', "value" : { "seconds": -'$seconds' } }, "id": 1}'
 }
 
 function send_text {
@@ -249,8 +254,8 @@ function show_help {
 echo -e "\n kodi-cli -[p|i|h|s|y youtube URL/ID|t 'text to send']\n\n" \
     "-p Play/Pause the current played video\n" \
     "-s Stop the current played video\n" \
-    "-j Skip forward in the current played video\n" \
-    "-k Skip backward in the current played video\n" \
+    "-j Skip forward in the current played video by 10 seconds. Use -j <seconds> to specify custom time)\n" \
+    "-k Skip backward in the current played video by 10 seconds. Use -k <seconds> to specify custom time)\n" \
     "-y Play youtube video. Use either URL/ID (of video)\n" \
     "-q Queue youtube video to the current list. Use either URL/ID (of video). Use instead of -y.\n" \
     "-o Play youtube video directly on Kodi. Use the name of video.\n" \
@@ -318,7 +323,7 @@ if [ -z "$KODI_PASS" ] && [ -n "$KODI_PASSWORD_COMMAND" ]; then
 fi
 
 ## Process command line arguments
-while getopts "yqoprstiudfhvmnjklx" opt; do
+while getopts "yqoprstiudfhvmnj:k:l:x" opt; do
     case $opt in
         l)  #play default playlist
             play_playlist
@@ -342,10 +347,9 @@ while getopts "yqoprstiudfhvmnjklx" opt; do
         s)
             stop
             ;;
-	r)
-	    pipe_text
-	    ;;
-
+        r)
+            pipe_text
+            ;;
         t)  
             send_text $2
             handle_keys
@@ -375,14 +379,13 @@ while getopts "yqoprstiudfhvmnjklx" opt; do
             handle_volume
             ;;
         j)
-            skip_forward
+            skip_forward $OPTARG  # Pass the value of seconds to skip
             ;;
         k)
-            skip_backward
+            skip_backward $OPTARG  # Pass the value of seconds to skip
             ;;
         x)
             volume_mute
             ;;
-
     esac
 done
