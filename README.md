@@ -37,8 +37,8 @@ Commannd invocation that returns the password on stdout (e.g. pass mykodibox/kod
 ```
  -p Play/Pause the current played video
  -s Stop the current played video
- -j Skip forward in the current played video by 10 seconds. Use -j <seconds> to specify custom time)
- -k Skip backward in the current played video by 10 seconds. Use -k <seconds> to specify custom time)
+ -j Skip forward in the current played video by 10 seconds. Use -j <seconds> to specify custom time
+ -k Skip backward in the current played video by 10 seconds. Use -k <seconds> to specify custom time
  -y Play youtube video. Use either URL/ID (of video)
  -q Queue youtube video to the current list. Use either URL/ID (of video). Use instead of -y.
  -o Play youtube video directly on Kodi. Use the name of video.

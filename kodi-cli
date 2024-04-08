@@ -108,6 +108,14 @@ function stop {
 
 function skip_time {
     local seconds=${1:-10}  # Default to 10 seconds if not provided
+
+    # Check if the argument is an integer
+    if ! [[ $seconds =~ ^[0-9]+$ ]]; then
+        echo "Error: Argument must be an integer." >&2
+        seconds=0
+        #return 1
+    fi
+
     echo $seconds
 }
 
@@ -254,8 +262,8 @@ function show_help {
 echo -e "\n kodi-cli -[p|i|h|s|y youtube URL/ID|t 'text to send']\n\n" \
     "-p Play/Pause the current played video\n" \
     "-s Stop the current played video\n" \
-    "-j Skip forward in the current played video by 10 seconds. Use -j <seconds> to specify custom time)\n" \
-    "-k Skip backward in the current played video by 10 seconds. Use -k <seconds> to specify custom time)\n" \
+    "-j Skip forward in the current played video by 10 seconds. Use -j <seconds> to specify custom time\n" \
+    "-k Skip backward in the current played video by 10 seconds. Use -k <seconds> to specify custom time\n" \
     "-y Play youtube video. Use either URL/ID (of video)\n" \
     "-q Queue youtube video to the current list. Use either URL/ID (of video). Use instead of -y.\n" \
     "-o Play youtube video directly on Kodi. Use the name of video.\n" \
@@ -323,7 +331,7 @@ if [ -z "$KODI_PASS" ] && [ -n "$KODI_PASSWORD_COMMAND" ]; then
 fi
 
 ## Process command line arguments
-while getopts "yqoprstiudfhvmnj:k:l:x" opt; do
+while getopts ":yqoprstiudfhvmnj:k:l:x" opt; do
     case $opt in
         l)  #play default playlist
             play_playlist
@@ -379,13 +387,39 @@ while getopts "yqoprstiudfhvmnj:k:l:x" opt; do
             handle_volume
             ;;
         j)
-            skip_forward $OPTARG  # Pass the value of seconds to skip
+            if [ -n "$OPTARG" ] && [[ $OPTARG != -* ]]; then
+                skip_forward $OPTARG
+            else
+                OPTIND=$((OPTIND - 1))
+            fi
             ;;
         k)
-            skip_backward $OPTARG  # Pass the value of seconds to skip
+            if [ -n "$OPTARG" ] && [[ $OPTARG != -* ]]; then
+                skip_backward $OPTARG
+            else
+                OPTIND=$((OPTIND - 1))
+            fi
             ;;
         x)
             volume_mute
             ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+        :)
+            if [[ k == $OPTARG || j == $OPTARG ]]; then
+                echo "Using default value for -$OPTARG: $(skip_time)"
+                if [[ k == $OPTARG ]]; then
+                    function_call="skip_backward"
+                else
+                    function_call="skip_forward"
+                fi
+                "$function_call"
+            else
+                echo "Invalid argument for -$OPTARG"
+            fi
+            ;;
     esac
 done
+
