@@ -66,7 +66,7 @@ Commannd invocation that returns the password on stdout (e.g. pass mykodibox/kod
 
 ## Optional dependencies
 
-* [mps-youtube](https://github.com/np1/mps-youtube) on the machine running Kodi for the -o option to work.
+* [yewtube](https://github.com/mps-youtube/yewtube) on the machine running Kodi for the -o option to work.
 
 ## Advanced usage
 
