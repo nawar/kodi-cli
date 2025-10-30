@@ -331,7 +331,7 @@ if [ -z "$KODI_PASS" ] && [ -n "$KODI_PASSWORD_COMMAND" ]; then
 fi
 
 ## Process command line arguments
-while getopts ":yqoprstiudfhvmnj:k:l:x" opt; do
+while getopts ":yqoprstiudfhvmnjklx" opt; do
     case $opt in
         l)  #play default playlist
             play_playlist
@@ -387,17 +387,29 @@ while getopts ":yqoprstiudfhvmnj:k:l:x" opt; do
             handle_volume
             ;;
         j)
-            if [ -n "$OPTARG" ] && [[ $OPTARG != -* ]]; then
-                skip_forward $OPTARG
+            if [[ $OPTIND -le $# ]]; then
+                next_arg="${!OPTIND}"
+                if ! [[ "$next_arg" =~ ^- ]]; then
+                    skip_forward "$next_arg"
+                    ((OPTIND++))
+                else
+                    skip_forward
+                fi
             else
-                OPTIND=$((OPTIND - 1))
+                skip_forward
             fi
             ;;
         k)
-            if [ -n "$OPTARG" ] && [[ $OPTARG != -* ]]; then
-                skip_backward $OPTARG
+            if [[ $OPTIND -le $# ]]; then
+                next_arg="${!OPTIND}"
+                if ! [[ "$next_arg" =~ ^- ]]; then
+                    skip_backward "$next_arg"
+                    ((OPTIND++))
+                else
+                    skip_backward
+                fi
             else
-                OPTIND=$((OPTIND - 1))
+                skip_backward
             fi
             ;;
         x)
@@ -406,19 +418,6 @@ while getopts ":yqoprstiudfhvmnj:k:l:x" opt; do
         \?)
             echo "Invalid option: -$OPTARG" >&2
             exit 1
-            ;;
-        :)
-            if [[ k == $OPTARG || j == $OPTARG ]]; then
-                echo "Using default value for -$OPTARG: $(skip_time)"
-                if [[ k == $OPTARG ]]; then
-                    function_call="skip_backward"
-                else
-                    function_call="skip_forward"
-                fi
-                "$function_call"
-            else
-                echo "Invalid argument for -$OPTARG"
-            fi
             ;;
     esac
 done
